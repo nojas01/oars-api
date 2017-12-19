@@ -19,6 +19,8 @@ router.get('/trainings/:userId', function(req, res) {
     console.log(req);
       const newTraining = req.body
 
+      debugger
+
       models.Training.create(newTraining)
         .then((training) => {
           io.emit('action', {
