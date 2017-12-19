@@ -2,7 +2,7 @@ const models = require('../models');
 const express = require('express');
 const router = express.Router();
 
-router.get('/trainings/:userId', function(req, res) {
+router.get('/trainings/:id', function(req, res) {
   models.Training.findAll({
       include: [{
         model: models.User,
@@ -19,14 +19,8 @@ router.get('/trainings/:userId', function(req, res) {
     console.log(req);
       const newTraining = req.body
 
-      debugger
-
       models.Training.create(newTraining)
         .then((training) => {
-          io.emit('action', {
-            type: 'TRAINING_CREATED',
-            payload: training
-          })
           res.json(training)
 
         })
