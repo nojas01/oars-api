@@ -5,7 +5,10 @@ module.exports = (sequelize, DataTypes) => {
     starttime: DataTypes.TIME,
     duration: DataTypes.TIME,
     UserId: DataTypes.INTEGER,
-    boat: DataTypes.STRING
+    boat_1_name: DataTypes.STRING,
+    boat_2_name: DataTypes.STRING,
+    boat_3_name: DataTypes.STRING,
+    boat_4_name: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
