@@ -1,9 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var Training = sequelize.define('Training', {
+  const Training = sequelize.define('Training', {
     startdate: DataTypes.DATEONLY,
     starttime: DataTypes.TIME,
-    duration: DataTypes.TIME
+    duration: DataTypes.TIME,
+    UserId: DataTypes.INTEGER,
+    boat: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
