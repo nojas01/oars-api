@@ -1,13 +1,13 @@
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const routes = require('./routes')
-var models = require('./models')
-var express = require('express');
+const { trainings } = require('./routes')
+const models = require('./models')
+const express = require('express');
 
 const PORT = process.env.PORT || 3030
 
 models.sequelize.sync().then(function() { // from express example/bin/www
-  let app = express()
+  const app = express()
     // it's not nessassary
     .use(cors())
     .use(bodyParser.urlencoded({
@@ -15,7 +15,7 @@ models.sequelize.sync().then(function() { // from express example/bin/www
     }))
     .use(bodyParser.json())
     // Our routes
-    .use(routes)
+    .use(trainings)
     // catch 404 and forward to error handler, actuall error
     .use((req, res, next) => {
       const err = new Error('Not Found')
