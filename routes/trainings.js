@@ -20,7 +20,7 @@ router.get('/trainings/:id', function(req, res) {
       include: [{
         model: models.User,
         where: {
-          id: req.params.userId
+          id: 1
         }
       }]
     }).then(function(trainings) {
