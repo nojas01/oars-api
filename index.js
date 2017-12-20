@@ -1,21 +1,41 @@
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const { trainings } = require('./routes')
-const models = require('./models')
+const _ = require('lodash');
+//const cors = require('cors');
+const bodyParser = require('body-parser');
+const { trainings, users } = require('./routes');
+const models = require('./models');
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const passportJWT = require('passport-jwt');
+
+const jwtOptions = require('./config/jwt')
+const JwtStrategy = passportJWT.Strategy;
+
+const strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
+  console.log('payload received', jwt_payload);
+  // usually this would be a database call:
+  models.User.findById(jwt_payload.id).then(user => {
+    if (user) {
+      next(null, user);
+    } else {
+      next(null, false);
+    }
+  })
+});
+
+passport.use(strategy);
 
 const PORT = process.env.PORT || 3030
 
 models.sequelize.sync().then(function() { // from express example/bin/www
-  const app = express()
+  let app = express()
     // it's not nessassary
-    .use(cors())
-    .use(bodyParser.urlencoded({
-      extended: true
-    }))
+    //.use(cors())
+    .use(passport.initialize())
+    .use(bodyParser.urlencoded({extended: true}))
     .use(bodyParser.json())
     // Our routes
-    .use(trainings)
+    .use(trainings, users)
     // catch 404 and forward to error handler, actuall error
     .use((req, res, next) => {
       const err = new Error('Not Found')

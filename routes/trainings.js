@@ -13,7 +13,8 @@ router.get('/trainings', function(req, res) {
     }).then(function(trainings) {
       res.json(trainings);
     });
-  });
+  })
+
 
 router.get('/trainings/:id', function(req, res) {
   const id = req.params.id
@@ -27,9 +28,9 @@ router.get('/trainings/:id', function(req, res) {
     }).then(function(trainings) {
       res.json(trainings);
     });
-  });
+  })
 
-  router.post('/trainings', (req, res, next) => {
+  .post('/trainings', (req, res, next) => {
     console.log(req);
       const newTraining = req.body
 
