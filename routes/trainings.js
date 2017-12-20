@@ -15,12 +15,14 @@ router.get('/trainings', function(req, res) {
     });
   })
 
-.get('/trainings/:id', function(req, res) {
-  models.Training.findAll({
+
+router.get('/trainings/:id', function(req, res) {
+  const id = req.params.id
+  models.Training.finById(id)({
       include: [{
         model: models.User,
         where: {
-          id: req.params.userId
+          id: 1
         }
       }]
     }).then(function(trainings) {
