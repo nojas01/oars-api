@@ -3,33 +3,23 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/trainings', function(req, res) {
-  models.Training.findAll({
-      include: [{
-        model: models.User,
-        where: {
-          id: 1
-        }
-      }]
-    }).then(function(trainings) {
+  models.Training.findAll()
+
+      .then(function(trainings) {
       res.json(trainings);
     });
   })
 
 
-router.get('/trainings/:id', function(req, res) {
-  const id = req.params.id
-  models.Training.finById(id)({
-      include: [{
-        model: models.User,
-        where: {
-          id: 1
-        }
-      }]
-    }).then(function(trainings) {
-      res.json(trainings);
-    });
+router.get('/trainings/:id', (req, res, next) => {
+    const id = req.params.id
+    models.Training.findById(id)
+      .then((training) => {
+        if (!training) { return next() }
+        res.json(training)
+      })
+      .catch((error) => next(error))
   })
-
   .post('/trainings', (req, res, next) => {
     console.log(req);
       const newTraining = req.body
