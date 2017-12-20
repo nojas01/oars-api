@@ -13,10 +13,12 @@ router.get('/trainings', function(req, res) {
     }).then(function(trainings) {
       res.json(trainings);
     });
-  });
+  })
+
 
 router.get('/trainings/:id', function(req, res) {
-  models.Training.findAll({
+  const id = req.params.id
+  models.Training.finById(id)({
       include: [{
         model: models.User,
         where: {
@@ -26,9 +28,9 @@ router.get('/trainings/:id', function(req, res) {
     }).then(function(trainings) {
       res.json(trainings);
     });
-  });
+  })
 
-  router.post('/trainings', (req, res, next) => {
+  .post('/trainings', (req, res, next) => {
     console.log(req);
       const newTraining = req.body
 
