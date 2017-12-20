@@ -1,15 +1,24 @@
-const models = require('../models');
-const express = require('express');
-const router = express.Router();
+const models = require('../models')
+const express = require('express')
+const router = express.Router()
 const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
+
+const upload = multer({ storage: storage })
 
 router.get('/trainings', function(req, res) {
   models.Training.findAll()
 
       .then(function(trainings) {
-      res.json(trainings);
-    });
+      res.json(trainings)
+    })
   })
 
 
@@ -33,4 +42,4 @@ router.get('/trainings/:id', (req, res, next) => {
   })
 
 
-module.exports = router;
+module.exports = router
