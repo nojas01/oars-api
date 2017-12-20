@@ -1,8 +1,11 @@
+
+const cors = require('cors')
+const bodyParser = require('body-parser')
+const { trainings, users, ships, rowers } = require('./routes')
+const models = require('./models')
 const _ = require('lodash');
-//const cors = require('cors');
 const bodyParser = require('body-parser');
-const { trainings, users } = require('./routes');
-const models = require('./models');
+
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
@@ -35,7 +38,11 @@ models.sequelize.sync().then(function() { // from express example/bin/www
     .use(bodyParser.urlencoded({extended: true}))
     .use(bodyParser.json())
     // Our routes
+
+    .use(rowers)
+    .use(ships)
     .use(trainings, users)
+
     // catch 404 and forward to error handler, actuall error
     .use((req, res, next) => {
       const err = new Error('Not Found')
