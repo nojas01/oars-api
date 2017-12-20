@@ -1,6 +1,8 @@
 const models = require('../models');
 const express = require('express');
 const router = express.Router();
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
 router.get('/trainings', function(req, res) {
   models.Training.findAll()
@@ -20,10 +22,8 @@ router.get('/trainings/:id', (req, res, next) => {
       })
       .catch((error) => next(error))
   })
-  .post('/trainings', (req, res, next) => {
-    console.log(req);
+  .post('/trainings', upload.single('training'), (req, res, next) => {
       const newTraining = req.body
-
       models.Training.create(newTraining)
         .then((training) => {
           res.json(training)
