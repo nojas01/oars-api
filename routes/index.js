@@ -1,5 +1,9 @@
 const trainings = require('./trainings')
+const rowers = require('./rowers')
+const ships = require('./ships')
 
 module.exports = {
-  trainings
+  trainings,
+  rowers,
+  ships
 }

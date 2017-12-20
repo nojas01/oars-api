@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   Ship.associate = function(models) {
-    Ship.belongsToMany(models.Training, { through: 'TrainingShip' });
+    Ship.belongsToMany(models.Training, {
+      through: 'TrainingShip'
+    });
   };
   return Ship;
 };
