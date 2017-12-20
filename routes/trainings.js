@@ -1,17 +1,28 @@
-const models = require('../models');
-const express = require('express');
-const router = express.Router();
+const models = require('../models')
+const express = require('express')
+const multer  = require('multer')
+const router = express.Router()
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
 
-router.get('/trainings', function(req, res) {
-  models.Training.findAll()
+const upload = multer({ storage: storage })
+
+router
+  .get('/trainings', function(req, res) {
+    models.Training.findAll()
 
       .then(function(trainings) {
-      res.json(trainings);
-    });
+      res.json(trainings)
+    })
   })
 
-
-router.get('/trainings/:id', (req, res, next) => {
+  .get('/trainings/:id', (req, res, next) => {
     const id = req.params.id
     models.Training.findById(id)
       .then((training) => {
@@ -20,10 +31,9 @@ router.get('/trainings/:id', (req, res, next) => {
       })
       .catch((error) => next(error))
   })
-  .post('/trainings', (req, res, next) => {
-    console.log(req);
-      const newTraining = req.body
 
+  .post('/trainings', upload.single('training'), (req, res, next) => {
+      const newTraining = req.body
       models.Training.create(newTraining)
         .then((training) => {
           res.json(training)
@@ -33,4 +43,4 @@ router.get('/trainings/:id', (req, res, next) => {
   })
 
 
-module.exports = router;
+module.exports = router
