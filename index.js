@@ -1,4 +1,3 @@
-
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const { trainings, users, ships, rowers } = require('./routes')
