@@ -16,12 +16,10 @@ router.post("/login", function(req, res) {
       const newUserName = req.body.username
       const newUserPassword = req.body.password
       const hashedUserPassword = bcrypt.hashSync(newUserPassword, 10)
-      console.log(newUserPassword);
-      console.log(hashedUserPassword);
-      const newUser = {}
 
       models.User.create({username: newUserName, password: hashedUserPassword})
         .then((users) => res.json({message:"user created"}))
+        
         .catch((error) => next(error))
     }
 

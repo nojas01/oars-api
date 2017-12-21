@@ -1,14 +1,12 @@
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const { trainings, users, ships, rowers } = require('./routes')
+const { trainings, users, ships, rowers, fileuploads } = require('./routes')
 const models = require('./models')
 const _ = require('lodash');
-
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
-
 const jwtOptions = require('./config/jwt')
 const JwtStrategy = passportJWT.Strategy;
 
@@ -30,15 +28,16 @@ const PORT = process.env.PORT || 3030
 
 models.sequelize.sync().then(function() { // from express example/bin/www
   let app = express()
-    // it's not nessassary
+
     .use(cors())
     .use(passport.initialize())
     .use(bodyParser.urlencoded({extended: true}))
     .use(bodyParser.json())
-    // Our routes
 
+    // Our routes
     .use(rowers)
     .use(ships)
+    .use(fileuploads)
     .use(trainings, users)
 
     // catch 404 and forward to error handler, actuall error
