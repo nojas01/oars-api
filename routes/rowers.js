@@ -22,7 +22,7 @@ router.post('/rowers', (req, res, next) => {
   const newRower = req.body
 
   models.Rower.create(newRower)
-    .then((rowers) => res.json(rowers))
+    .then((rower) => res.json(rower))
     .catch((error) => next(error))
   })
 
