@@ -4,7 +4,6 @@ const bodyParser = require('body-parser')
 const { trainings, users, ships, rowers } = require('./routes')
 const models = require('./models')
 const _ = require('lodash');
-const bodyParser = require('body-parser');
 
 const express = require('express');
 const jwt = require('jsonwebtoken');
@@ -33,7 +32,7 @@ const PORT = process.env.PORT || 3030
 models.sequelize.sync().then(function() { // from express example/bin/www
   let app = express()
     // it's not nessassary
-    //.use(cors())
+    .use(cors())
     .use(passport.initialize())
     .use(bodyParser.urlencoded({extended: true}))
     .use(bodyParser.json())
