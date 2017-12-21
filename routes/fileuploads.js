@@ -17,10 +17,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 router
- .post('/fileupload', upload.single('training'), (req, res, next) => {
-
-          res.json({message: "file stored"})
-
+  .post('/fileupload', upload.single('training'), (req, res, next) => {
+    res.json({message: "file stored"})
   })
 
 module.exports = router;
