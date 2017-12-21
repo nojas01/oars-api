@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken')
 const jwtOptions = require('../config/jwt')
+const bcrypt = require('bcrypt');
 
 router.post("/login", function(req, res) {
   if(req.body.username && req.body.password){
@@ -12,9 +13,14 @@ router.post("/login", function(req, res) {
 // Function to check if the user exists, or if its a new user coming from the tablet (in which case it will create a new user)
   models.User.findOne({ where: {username: req.body.username} }).then(user => {
     if( !user && req.body.token === 'tablet' ){
-      const newUser = req.body
+      const newUserName = req.body.username
+      const newUserPassword = req.body.password
+      const hashedUserPassword = bcrypt.hashSync(newUserPassword, 10)
+      console.log(newUserPassword);
+      console.log(hashedUserPassword);
+      const newUser = {}
 
-      models.User.create(newUser)
+      models.User.create({username: newUserName, password: hashedUserPassword})
         .then((users) => res.json({message:"user created"}))
         .catch((error) => next(error))
     }
