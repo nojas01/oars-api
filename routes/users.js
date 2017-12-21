@@ -29,7 +29,7 @@ router.post("/login", function(req, res) {
         res.status(401).json({message:"no such user found"});
     }
 
-    if(user.dataValues.password === req.body.password) {
+    if(bcrypt.compareSync(req.body.password, user.password)) {
       // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
       var payload = {id: user.dataValues.id};
       var token = jwt.sign(payload, jwtOptions.secretOrKey);
