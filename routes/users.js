@@ -9,7 +9,7 @@ router.post("/login", function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
   }
-
+// Function to check if the user exists, or if its a new user coming from the tablet (in which case it will create a new user)
   models.User.findOne({ where: {username: req.body.username} }).then(user => {
     if( !user && req.body.token === 'tablet' ){
       const newUser = req.body
