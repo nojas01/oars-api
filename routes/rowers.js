@@ -29,10 +29,25 @@ router.get('/rowers/:id', (req, res, next) => {
 
 router.post('/rowers', (req, res, next) => {
   const newRower = req.body
-
+  console.log(newRower)
   models.Rower.create(newRower)
     .then((rower) => res.json(rower))
     .catch((error) => next(error))
   })
+
+router.post('/rowersToTraining', (req, res, next) => {
+  const RowerId = req.body.RowerId.toString(); //has to be a string, not a number!
+  const TrainingId = req.body.TrainingId.toString(); //has to be a string, not a number!
+  const boat_number = req.body.boat_number.toString();//has to be a string, not a number!
+  const Sequelize = require('sequelize');
+  const sequelize = new Sequelize(config.database, config.username, config.password, config)
+  const values = "(" + RowerId + ", " + TrainingId + ", " + boat_number + ")"
+  const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES"
+  const queryForDBSql = question + values
+
+  sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.SELECT})
+    .then((rower) => res.json(rower))
+    .catch((error) => next(error))
+})
 
 module.exports = router;
