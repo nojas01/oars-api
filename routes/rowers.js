@@ -45,7 +45,7 @@ router.post('/rowersToTraining', (req, res, next) => {
   const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES"
   const queryForDBSql = question + values
 
-  sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.SELECT})
+  sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.UPDATE})
     .then((rower) => res.json(rower))
     .catch((error) => next(error))
 })
