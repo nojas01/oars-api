@@ -44,7 +44,7 @@ router.post('/rowers', (req, res, next) => {
    const sequelize = new Sequelize(config.database, config.username, config.password, config)
 
    //loop over rowers
-   for (var i = 0; i < 4; i++) {
+   for (var i = 0; i < rowers.length; i++) {
    const values = "(" + rowers[i] + ", " + trainingId + ", " + boat_number + ")"
    const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES "
    const queryForDBSql = question + values
@@ -62,6 +62,47 @@ router.post('/rowers', (req, res, next) => {
    .then((rower) => res.json(rower))
    .catch((error) => next(error))
 
- })
+ }) ;
+
+router.get('/rowersToTraining/:TrainingId/:boat_number', (req, res, next) => {
+ const TrainingId = req.params.TrainingId;
+ const boat_number = req.params.boat_number;
+
+ models.Rower.findAll({
+     include: [{
+       model: models.Training,
+       through: {
+         attributes: ['TrainingId', 'RowerId', 'boat_number'],
+         where: {
+           TrainingId: +TrainingId,
+           boat_number: +boat_number
+         }
+       }
+     }],
+     attributes: ['Id']
+   })
+   .then(function(rowers) {
+     models.Ship.findAll({
+         include: [{
+           model: models.Training,
+           through: {
+             attributes: ['TrainingId', 'ShipId', 'boat_number'],
+             where: {
+               TrainingId: +TrainingId,
+               boat_number: +boat_number
+             }
+           }
+         }],
+         attributes: ['Id']
+       })
+    .then(function(ships) {
+        res.json({
+          ships: ships.filter(ship => ship.Trainings.length > 0),
+          rowers: rowers.filter(rower => rower.Trainings.length > 0)
+        })
+      });
+   })
+});
+
 
 module.exports = router;
