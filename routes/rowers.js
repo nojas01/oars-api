@@ -64,25 +64,4 @@ router.post('/rowers', (req, res, next) => {
 
  })
 
-router.post('/rowersToTraining', (req, res, next) => {
-  const Sequelize = require('sequelize');
-  const sequelize = new Sequelize(config.database, config.username, config.password, config)
-  const TrainingId = req.body.TrainingId.toString(); //has to be a string, not a number!
-  const boat_number = req.body.boat_number.toString();//has to be a string, not a number!
-  const array = req.body.RowerId
-  console.log(typeof array);
-  console.log(array);
-
-  const newArray = array.map((id) => {
-    const RowerId = id.toString(); //has to be a string, not a number!
-    const values = "(" + RowerId + ", " + TrainingId + ", " + boat_number + ")"
-    const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES"
-    const queryForDBSql = question + values
-
-    sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.UPDATE})
-    .then((rower) => res.json(rower))
-    .catch((error) => next(error))
-  })
-})
-
 module.exports = router;
