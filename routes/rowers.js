@@ -30,9 +30,39 @@ router.get('/rowers/:id', (req, res, next) => {
 router.post('/rowers', (req, res, next) => {
   const newRower = req.body
 
+  console.log(newRower)
   models.Rower.create(newRower)
     .then((rower) => res.json(rower))
     .catch((error) => next(error))
-  })
+  }) ;
+
+  router.post('/rowersToTraining', (req, res, next) => {
+   const rowers = req.body.rowers;
+   const trainingId = req.body.trainingId.toString(); //has to be a string, not a number!
+   const boat_number = req.body.boat_number_name.toString();//has to be a string, not a number!
+   const shipId = req.body.shipId.toString();
+   const Sequelize = require('sequelize');
+   const sequelize = new Sequelize(config.database, config.username, config.password, config)
+
+   //loop over rowers
+   for (var i = 0; i < 4; i++) {
+   const values = "(" + rowers[i] + ", " + trainingId + ", " + boat_number + ")"
+   const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES "
+   const queryForDBSql = question + values
+
+   sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.UPDATE})
+    .then((rower) => res.json(rower))
+    .catch((error) => next(error))
+  }
+    //connect ship with training
+  const valueShip =  "(" + shipId + ", " + trainingId + ", " + boat_number + ")"
+  const questionShip = "INSERT INTO `TrainingShip` (ShipId, TrainingId, boat_number) VALUES "
+  const queryForDBSql2 = questionShip + valueShip
+
+  sequelize.query(queryForDBSql2, { type: Sequelize.QueryTypes.UPDATE})
+   .then((rower) => res.json(rower))
+   .catch((error) => next(error))
+
+ })
 
 module.exports = router;

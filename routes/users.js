@@ -6,6 +6,7 @@ const jwtOptions = require('../config/jwt')
 const bcrypt = require('bcrypt');
 
 router.post("/login", function(req, res) {
+let check = false
   // Function to check if the user exists
   models.User.findOne({ where: {username: req.body.username} }).then(user => {
     // New user made on the tablet? create a new user!
@@ -16,6 +17,8 @@ router.post("/login", function(req, res) {
       models.User.create({username: newUserName, password: hashedUserPassword})
         .then((users) => res.json({message:"user created"}))
         .catch((error) => next(error))
+        check = true
+        console.log(`hello ${check}`)
         return
     }
     else if (!user) {
@@ -23,7 +26,7 @@ router.post("/login", function(req, res) {
         res.status(401).json({message:"no such user found"});
         return
     }
-
+    //console.log(`hello ${check}`)
     if(bcrypt.compareSync(req.body.password, user.password)) {
       // from now on we'll identify the user by the id and
       // the id is the only personalized value that goes into our token
