@@ -1,14 +1,10 @@
 
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const { trainings, users, ships, rowers } = require('./routes')
+const { trainings, users, ships, rowers} = require('./routes')
 const models = require('./models')
 const _ = require('lodash');
 
-const cors = require('cors');
-
-
-const bodyParser = require('body-parser');
 
 const express = require('express');
 const jwt = require('jsonwebtoken');

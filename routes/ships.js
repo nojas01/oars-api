@@ -11,9 +11,9 @@ router.get('/ships', (req, res, next) => {
 router.get('/ships/:id', (req, res, next) => {
   const id = req.params.id
   models.Ship.findById(id)
-    .then((ships) => {
-      if (!ships) { return next() }
-      res.json(ships)
+    .then((ship) => {
+      if (!ship) { return next() }
+      res.json(ship)
     })
    .catch((error) => next(error))
   });

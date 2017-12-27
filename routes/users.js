@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken')
 const jwtOptions = require('../config/jwt')
+const passport = require('../config/auth')
 
 router.post("/login", function(req, res) {
   if(req.body.username && req.body.password){
@@ -25,4 +26,14 @@ router.post("/login", function(req, res) {
   })
 });
 
-module.exports = router;
+router.get('/secret', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  if (!req.account) {
+    const error = new Error('Unauthorized')
+    error.status = 401
+    next(error)
+  }
+
+  res.json(req.account)
+})
+
+module.exports = router
