@@ -37,8 +37,11 @@ router.post('/rowers', (req, res, next) => {
 
   router.post('/rowersToTraining', (req, res, next) => {
    const rowers = req.body.rowers;
+
    const trainingId = req.body.trainingId.toString(); //has to be a string, not a number!
+
    const boat_number = req.body.boat_number_name.toString();//has to be a string, not a number!
+
    const shipId = req.body.shipId.toString();
    const Sequelize = require('sequelize');
    const sequelize = new Sequelize(config.database, config.username, config.password, config)
@@ -63,7 +66,7 @@ router.post('/rowers', (req, res, next) => {
    .catch((error) => next(error))
 
  }) ;
-
+//for getting rowers for boat in training
 router.get('/rowersToTraining/:TrainingId/:boat_number', (req, res, next) => {
  const TrainingId = req.params.TrainingId;
  const boat_number = req.params.boat_number;
