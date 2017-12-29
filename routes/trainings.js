@@ -1,14 +1,20 @@
 const models = require('../models')
 const express = require('express')
 const router = express.Router()
+const passport = require('../config/auth')
 
 router
-  .get('/trainings', function(req, res) {
-    models.Training.findAll()
-
-      .then(function(trainings) {
+  .get('/trainings', passport.authorize('jwt', {session: false }), function(req, res) {
+    models.Training.findAll({
+      include:[{
+        model: models.User,
+        where: {
+          id: req.account.id
+        }
+      }]
+    }).then(function(trainings) {
       res.json(trainings)
-    })
+      })
   })
 
   .get('/trainings/:id', (req, res, next) => {
