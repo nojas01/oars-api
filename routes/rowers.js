@@ -17,7 +17,7 @@ router.get('/rowers/:id', passport.authorize('jwt', {session: false }), (req, re
   const id = req.params.id
   const account = req.account.id
   const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingRower` ON TrainingRower.trainingid = Trainings.id INNER JOIN `Rowers` ON  TrainingRower.rowerid = Rowers.id WHERE Rowers.id ="
-  const queryForSql = question + id
+  const queryForSql = question + id + " AND UserId =" + account
 
   sequelize.query(queryForSql, { type: Sequelize.QueryTypes.SELECT})
     .then((rowers) => {
@@ -63,37 +63,38 @@ router.post('/rowersToTraining', passport.authorize('jwt', {session: false }), (
 })
 
 router.get('/rowersToTraining/:TrainingId/:boat_number', passport.authorize('jwt', {session: false }), (req, res, next) => {
- const TrainingId = req.params.TrainingId;
- const boat_number = req.params.boat_number;
+  const TrainingId = req.params.TrainingId;
+  const boat_number = req.params.boat_number;
+  const UserId = req.account.id
 
- models.Rower.findAll({
-     include: [{
-       model: models.Training,
-       through: {
-         attributes: ['TrainingId', 'RowerId', 'boat_number'],
-         where: {
-           TrainingId: +TrainingId,
-           boat_number: +boat_number,
-
-         }
-       }
-     }],
-     attributes: ['Id']
-   })
-   .then(function(rowers) {
-     models.Ship.findAll({
-         include: [{
-           model: models.Training,
-           through: {
-             attributes: ['TrainingId', 'ShipId', 'boat_number'],
-             where: {
-               TrainingId: +TrainingId,
-               boat_number: +boat_number
-             }
-           }
-         }],
-         attributes: ['Id']
-       })
+  models.Rower.findAll({
+    include: [{
+      model: models.Training,
+      through: {
+        attributes: ['TrainingId', 'RowerId', 'boat_number'],
+        where: {
+          TrainingId: +TrainingId,
+          boat_number: +boat_number,
+          UserId: +UserId
+        }
+      }
+    }],
+    attributes: ['Id']
+  })
+  .then(function(rowers) {
+    models.Ship.findAll({
+        include: [{
+          model: models.Training,
+          through: {
+            attributes: ['TrainingId', 'ShipId', 'boat_number'],
+            where: {
+              TrainingId: +TrainingId,
+              boat_number: +boat_number
+            }
+          }
+        }],
+        attributes: ['Id']
+      })
     .then(function(ships) {
         res.json({
           ships: ships.filter(ship => ship.Trainings.length > 0),
