@@ -1,6 +1,6 @@
-const models = require('../models');
-const express = require('express');
-const router = express.Router();
+const models    = require('../models');
+const express   = require('express');
+const router    = express.Router();
 const env       = process.env.NODE_ENV || 'development';
 const config    = require(__dirname + '/../config/config.js')[env];
 const Sequelize = require('sequelize');
