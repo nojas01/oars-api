@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var Rower = sequelize.define('Rower', {
+  const Rower = sequelize.define('Rower', {
     firstname: DataTypes.STRING,
     lastname: DataTypes.STRING
   }, {
