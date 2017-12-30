@@ -43,8 +43,21 @@ router.post('/rowers', (req, res, next) => {
    const boat_number = req.body.boat_number_name.toString();//has to be a string, not a number!
 
    const shipId = req.body.shipId.toString();
+
    const Sequelize = require('sequelize');
    const sequelize = new Sequelize(config.database, config.username, config.password, config)
+
+   const questionRowerDelete = "DELETE tr FROM TrainingRower as tr WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
+   const queryForDBSql3 = questionRowerDelete
+
+   sequelize.query(queryForDBSql3, { type: Sequelize.QueryTypes.DELETE})
+    .catch((error) => next(error))
+
+    const questionShipDelete = "DELETE ts FROM TrainingShip as ts WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
+    const queryForDBSql4 = questionShipDelete
+
+    sequelize.query(queryForDBSql4, { type: Sequelize.QueryTypes.DELETE})
+     .catch((error) => next(error))
 
    //loop over rowers
    for (var i = 0; i < rowers.length; i++) {
@@ -53,10 +66,10 @@ router.post('/rowers', (req, res, next) => {
    const queryForDBSql = question + values
 
    sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.UPDATE})
-    .then((rower) => res.json(rower))
     .catch((error) => next(error))
   }
     //connect ship with training
+
   const valueShip =  "(" + shipId + ", " + trainingId + ", " + boat_number + ")"
   const questionShip = "INSERT INTO `TrainingShip` (ShipId, TrainingId, boat_number) VALUES "
   const queryForDBSql2 = questionShip + valueShip
