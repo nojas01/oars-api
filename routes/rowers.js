@@ -34,7 +34,6 @@ router.post('/rowers', (req, res, next) => {
   })
 
   router.post('/rowersToTraining', (req, res, next) => {
-<<<<<<< HEAD
    const rowers = req.body.rowers;
 
    const trainingId = req.body.trainingId.toString(); //has to be a string, not a number!
@@ -72,27 +71,6 @@ router.post('/rowers', (req, res, next) => {
   const valueShip =  "(" + shipId + ", " + trainingId + ", " + boat_number + ")"
   const questionShip = "INSERT INTO `TrainingShip` (ShipId, TrainingId, boat_number) VALUES "
   const queryForDBSql2 = questionShip + valueShip
-=======
-    const rowers = req.body.rowers
-    const trainingId = req.body.trainingId.toString() //has to be a string, not a number!
-    const boat_number = req.body.boat_number_name.toString()//has to be a string, not a number!
-    const shipId = req.body.shipId.toString()
-
-    //loop over rowers
-    for (var i = 0; i < rowers.length; i++) {
-      const values = "(" + rowers[i] + ", " + trainingId + ", " + boat_number + ")"
-      const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES "
-      const queryForDBSql = question + values
-
-      sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.UPDATE})
-        .then((rower) => res.json(rower))
-        .catch((error) => next(error))
-    }
-      //connect ship with training
-    const valueShip =  "(" + shipId + ", " + trainingId + ", " + boat_number + ")"
-    const questionShip = "INSERT INTO `TrainingShip` (ShipId, TrainingId, boat_number) VALUES "
-    const queryForDBSql2 = questionShip + valueShip
->>>>>>> f732cba5a51340fff6e92ff493356ff930c48e76
 
     sequelize.query(queryForDBSql2, { type: Sequelize.QueryTypes.UPDATE})
      .then((rower) => res.json(rower))
@@ -101,7 +79,7 @@ router.post('/rowers', (req, res, next) => {
  }) ;
 //for getting rowers for boat in training
 router.get('/rowersToTraining/:TrainingId/:boat_number', (req, res, next) => {
- const TrainingId = req.params.TrainingId;
+ const TrainingId = req.params.TrainingId;  
  const boat_number = req.params.boat_number;
 
  models.Rower.findAll({
