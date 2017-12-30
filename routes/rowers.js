@@ -34,39 +34,30 @@ router.post('/rowers', passport.authorize('jwt', {session: false }), (req, res, 
     .then((rower) => res.json(rower))
     .catch((error) => next(error))
 })
+// first delete all content then replace.
+router.post('/rowersToTraining', passport.authorize('jwt', {session: false }), (req, res, next) => {
+  const rowers = req.body.rowers
+  const trainingId = req.body.trainingId.toString() //has to be a string, not a number!
+  const boat_number = req.body.boat_number_name.toString() //has to be a string, not a number!
+  const shipId = req.body.shipId.toString()
+  const queryForDBSql3 = "DELETE tr FROM TrainingRower as tr WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
 
-  router.post('/rowersToTraining', passport.authorize('jwt', {session: false }), (req, res, next) => {
-   const rowers = req.body.rowers;
-
-   const trainingId = req.body.trainingId.toString(); //has to be a string, not a number!
-
-   const boat_number = req.body.boat_number_name.toString();//has to be a string, not a number!
-
-   const shipId = req.body.shipId.toString();
-
-   const Sequelize = require('sequelize');
-   const sequelize = new Sequelize(config.database, config.username, config.password, config)
-
-   const questionRowerDelete = "DELETE tr FROM TrainingRower as tr WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
-   const queryForDBSql3 = questionRowerDelete
-
-   sequelize.query(queryForDBSql3, { type: Sequelize.QueryTypes.DELETE})
+  sequelize.query(queryForDBSql3, { type: Sequelize.QueryTypes.DELETE})
     .catch((error) => next(error))
 
-    const questionShipDelete = "DELETE ts FROM TrainingShip as ts WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
-    const queryForDBSql4 = questionShipDelete
+  const queryForDBSql4 = "DELETE ts FROM TrainingShip as ts WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
 
-    sequelize.query(queryForDBSql4, { type: Sequelize.QueryTypes.DELETE})
-     .catch((error) => next(error))
+  sequelize.query(queryForDBSql4, { type: Sequelize.QueryTypes.DELETE})
+    .catch((error) => next(error))
 
    //loop over rowers
-   for (var i = 0; i < rowers.length; i++) {
-   const values = "(" + rowers[i] + ", " + trainingId + ", " + boat_number + ")"
-   const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES "
-   const queryForDBSql = question + values
+  for (var i = 0; i < rowers.length; i++) {
+    const values = "(" + rowers[i] + ", " + trainingId + ", " + boat_number + ")"
+    const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES "
+    const queryForDBSql = question + values
 
-   sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.UPDATE})
-    .catch((error) => next(error))
+    sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.UPDATE})
+      .catch((error) => next(error))
   }
     //connect ship with training
 
@@ -75,10 +66,10 @@ router.post('/rowers', passport.authorize('jwt', {session: false }), (req, res, 
   const queryForDBSql2 = questionShip + valueShip
 
   sequelize.query(queryForDBSql2, { type: Sequelize.QueryTypes.UPDATE})
-   .then((rower) => res.json(rower))
-   .catch((error) => next(error))
+    .then((rower) => res.json(rower))
+    .catch((error) => next(error))
 
- }) ;
+})
 //for getting rowers for boat in training
 router.get('/rowersToTraining/:TrainingId/:boat_number',passport.authorize('jwt', {session: false }), (req, res, next) => {
  const TrainingId = req.params.TrainingId;
