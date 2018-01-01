@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Training = sequelize.define('Training', {
     startdate: DataTypes.DATEONLY,
