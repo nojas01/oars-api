@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const TrainingRower = sequelize.define('TrainingShip', {
+  const TrainingRower = sequelize.define('TrainingRower', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
