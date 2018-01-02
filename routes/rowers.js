@@ -8,7 +8,9 @@ const Sequelize = require('sequelize')
 const sequelize = new Sequelize(config.database, config.username, config.password, config)
 
 router.get('/rowers', passport.authorize('jwt', {session: false }), (req, res, next) => {
-  sequelize.query("SELECT * FROM `Rowers`", { type: Sequelize.QueryTypes.SELECT})
+  const UserId = req.account.id
+  const question = "SELECT * FROM `Rowers` WHERE UserId =" + UserId
+  sequelize.query( question, { type: Sequelize.QueryTypes.SELECT})
     .then((rowers) => res.json(rowers))
     .catch((error) => next(error))
 })
@@ -16,8 +18,8 @@ router.get('/rowers', passport.authorize('jwt', {session: false }), (req, res, n
 router.get('/rowers/:id', passport.authorize('jwt', {session: false }), (req, res, next) => {
   const id = req.params.id
   const account = req.account.id
-  const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingRower` ON TrainingRower.trainingid = Trainings.id INNER JOIN `Rowers` ON  TrainingRower.rowerid = Rowers.id WHERE Rowers.id ="
-  const queryForSql = question + id + " AND UserId =" + account
+  const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingRowers` ON TrainingRowers.TrainingId = Trainings.id INNER JOIN `Rowers` ON  TrainingRowers.RowerId = Rowers.id WHERE Rowers.id ="
+  const queryForSql = question + id
 
   sequelize.query(queryForSql, { type: Sequelize.QueryTypes.SELECT })
     .then((rowers) => {
@@ -29,7 +31,7 @@ router.get('/rowers/:id', passport.authorize('jwt', {session: false }), (req, re
 
 router.post('/rowers', passport.authorize('jwt', {session: false }), (req, res, next) => {
   const newRower = req.body
-
+  newRower.UserId = req.account.id
   models.Rower.create(newRower)
     .then((rower) => res.json(rower))
     .catch((error) => next(error))
@@ -40,12 +42,12 @@ router.post('/rowersToTraining', passport.authorize('jwt', {session: false }), (
   const trainingId = req.body.trainingId.toString() //has to be a string, not a number!
   const boat_number = req.body.boat_number_name.toString() //has to be a string, not a number!
   const shipId = req.body.shipId.toString()
-  const queryForDBSql3 = "DELETE tr FROM TrainingRower as tr WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
+  const queryForDBSql3 = "DELETE tr FROM TrainingRowers as tr WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
 
   sequelize.query(queryForDBSql3, { type: Sequelize.QueryTypes.DELETE})
     .catch((error) => next(error))
 
-  const queryForDBSql4 = "DELETE ts FROM TrainingShip as ts WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
+  const queryForDBSql4 = "DELETE ts FROM TrainingShips as ts WHERE TrainingId = " + trainingId + " AND boat_number = " + boat_number
 
   sequelize.query(queryForDBSql4, { type: Sequelize.QueryTypes.DELETE})
     .catch((error) => next(error))
@@ -53,7 +55,7 @@ router.post('/rowersToTraining', passport.authorize('jwt', {session: false }), (
    //loop over rowers
   for (var i = 0; i < rowers.length; i++) {
     const values = "(" + rowers[i] + ", " + trainingId + ", " + boat_number + ")"
-    const question = "INSERT INTO `TrainingRower` (RowerId, TrainingId, boat_number) VALUES "
+    const question = "INSERT INTO `TrainingRowers` (RowerId, TrainingId, boat_number) VALUES "
     const queryForDBSql = question + values
 
     sequelize.query(queryForDBSql, { type: Sequelize.QueryTypes.UPDATE})
@@ -62,7 +64,7 @@ router.post('/rowersToTraining', passport.authorize('jwt', {session: false }), (
     //connect ship with training
 
   const valueShip =  "(" + shipId + ", " + trainingId + ", " + boat_number + ")"
-  const questionShip = "INSERT INTO `TrainingShip` (ShipId, TrainingId, boat_number) VALUES "
+  const questionShip = "INSERT INTO `TrainingShips` (ShipId, TrainingId, boat_number) VALUES "
   const queryForDBSql2 = questionShip + valueShip
 
   sequelize.query(queryForDBSql2, { type: Sequelize.QueryTypes.UPDATE})

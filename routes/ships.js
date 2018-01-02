@@ -8,7 +8,9 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(config.database, config.username, config.password, config)
 
 router.get('/ships', passport.authorize('jwt', {session: false }), (req, res, next) => {
-  models.Ship.findAll()
+  models.Ship.findAll({
+    where: { UserId: req.account.id }
+  })
     .then((ships) => res.json(ships))
     .catch((error) => next(error))
   });
@@ -16,8 +18,8 @@ router.get('/ships', passport.authorize('jwt', {session: false }), (req, res, ne
 router.get('/ships/:id', passport.authorize('jwt', {session: false }), (req, res, next) => {
   const id = req.params.id
   const account = req.account.id
-  const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingShip` ON TrainingShip.trainingid = Trainings.id INNER JOIN `Ships` ON TrainingShip.shipid = Ships.id WHERE Ships.id ="
-  const queryForSql = question + id + " AND UserId =" + account
+  const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingShips` ON TrainingShips.TrainingId = Trainings.id INNER JOIN `Ships` ON TrainingShips.ShipId = Ships.id WHERE Ships.id ="
+  const queryForSql = question + id
 
   sequelize.query(queryForSql, { type: Sequelize.QueryTypes.SELECT})
     .then((ships) => {
@@ -29,9 +31,10 @@ router.get('/ships/:id', passport.authorize('jwt', {session: false }), (req, res
 
   router.post('/ships', passport.authorize('jwt', {session: false }), (req, res, next) => {
     const newShip = req.body
+    newShip.UserId = req.account.id
 
     models.Ship.create(newShip)
-      .then((ships) => res.json(ships))
+      .then((ship) => res.json(ship))
       .catch((error) => next(error))
   })
 
