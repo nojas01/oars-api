@@ -33,8 +33,20 @@ module.exports = {
           model: 'Users',
           key: 'id'
         }
+      },
+      boat_1_name: {
+        type: Sequelize.STRING
+      },
+      boat_2_name: {
+        type: Sequelize.STRING
+      },
+      boat_3_name: {
+        type: Sequelize.STRING
+      },
+      boat_4_name: {
+        type: Sequelize.STRING
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('Trainings');

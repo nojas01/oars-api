@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = (sequelize, DataTypes) => {
   const Ship = sequelize.define('Ship', {
     name: DataTypes.STRING,
@@ -9,11 +9,12 @@ module.exports = (sequelize, DataTypes) => {
 
       }
     }
-  });
+  })
   Ship.associate = function(models) {
     Ship.belongsToMany(models.Training, {
       through: 'TrainingShip'
-    });
-  };
-  return Ship;
-};
+    })
+
+  }
+  return Ship
+}
