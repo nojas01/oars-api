@@ -2,8 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Ship = sequelize.define('Ship', {
     name: DataTypes.STRING,
-    type: DataTypes.STRING,
-    UserId: DataTypes.INTEGER
+    type: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
@@ -15,12 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     Ship.belongsToMany(models.Training, {
       through: 'TrainingShip'
     })
-    Ship.belongsTo(models.User, {
-      onDelete: "CASCADE",
-      foreignKey: {
-        allowNull: false
-      }
-    })
+
   }
   return Ship
 }

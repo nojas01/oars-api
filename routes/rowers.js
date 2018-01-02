@@ -8,16 +8,13 @@ const Sequelize = require('sequelize')
 const sequelize = new Sequelize(config.database, config.username, config.password, config)
 
 router.get('/rowers', passport.authorize('jwt', {session: false }), (req, res, next) => {
-  const UserId = req.account.id
-  const question = "SELECT * FROM `Rowers` WHERE UserId =" + UserId
-  sequelize.query( question, { type: Sequelize.QueryTypes.SELECT})
+  sequelize.query( "SELECT * FROM `Rowers`", { type: Sequelize.QueryTypes.SELECT})
     .then((rowers) => res.json(rowers))
     .catch((error) => next(error))
 })
 
 router.get('/rowers/:id', passport.authorize('jwt', {session: false }), (req, res, next) => {
   const id = req.params.id
-  const account = req.account.id
   const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingRowers` ON TrainingRowers.TrainingId = Trainings.id INNER JOIN `Rowers` ON  TrainingRowers.RowerId = Rowers.id WHERE Rowers.id ="
   const queryForSql = question + id
 
@@ -31,7 +28,6 @@ router.get('/rowers/:id', passport.authorize('jwt', {session: false }), (req, re
 
 router.post('/rowers', passport.authorize('jwt', {session: false }), (req, res, next) => {
   const newRower = req.body
-  newRower.UserId = req.account.id
   models.Rower.create(newRower)
     .then((rower) => res.json(rower))
     .catch((error) => next(error))

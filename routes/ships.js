@@ -8,16 +8,13 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(config.database, config.username, config.password, config)
 
 router.get('/ships', passport.authorize('jwt', {session: false }), (req, res, next) => {
-  models.Ship.findAll({
-    where: { UserId: req.account.id }
-  })
+  models.Ship.findAll()
     .then((ships) => res.json(ships))
     .catch((error) => next(error))
   });
 
 router.get('/ships/:id', passport.authorize('jwt', {session: false }), (req, res, next) => {
   const id = req.params.id
-  const account = req.account.id
   const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingShips` ON TrainingShips.TrainingId = Trainings.id INNER JOIN `Ships` ON TrainingShips.ShipId = Ships.id WHERE Ships.id ="
   const queryForSql = question + id
 
@@ -31,7 +28,6 @@ router.get('/ships/:id', passport.authorize('jwt', {session: false }), (req, res
 
   router.post('/ships', passport.authorize('jwt', {session: false }), (req, res, next) => {
     const newShip = req.body
-    newShip.UserId = req.account.id
 
     models.Ship.create(newShip)
       .then((ship) => res.json(ship))
