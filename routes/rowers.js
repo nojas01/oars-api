@@ -15,8 +15,9 @@ router.get('/rowers', passport.authorize('jwt', {session: false }), (req, res, n
 
 router.get('/rowers/:id', passport.authorize('jwt', {session: false }), (req, res, next) => {
   const id = req.params.id
+  const account = req.account.id
   const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingRowers` ON TrainingRowers.TrainingId = Trainings.id INNER JOIN `Rowers` ON  TrainingRowers.RowerId = Rowers.id WHERE Rowers.id ="
-  const queryForSql = question + id
+  const queryForSql = question + id + " AND Trainings.UserId =" + account
 
   sequelize.query(queryForSql, { type: Sequelize.QueryTypes.SELECT })
     .then((rowers) => {
@@ -77,7 +78,7 @@ router.get('/rowersToTraining/:TrainingId/:boat_number',passport.authorize('jwt'
   models.Rower.findAll({
     include: [{ model: models.Training,
       through: { attributes: ['TrainingId', 'RowerId', 'boat_number'],
-        where: { TrainingId: +TrainingId, boat_number: +boat_number, UserId: +UserId } }
+        where: { TrainingId: +TrainingId, boat_number: +boat_number } }
     }], attributes: ['Id']
   })
   .then(function(rowers) {
@@ -89,8 +90,8 @@ router.get('/rowersToTraining/:TrainingId/:boat_number',passport.authorize('jwt'
       })
     .then(function(ships) {
         res.json({
-          ships: ships.filter(ship => ship.Trainings.length > 0),
-          rowers: rowers.filter(rower => rower.Trainings.length > 0)
+          ships: ships.filter(ship => ship.Trainings.length > 0 ),
+          rowers: rowers.filter(rower => rower.Trainings.length > 0 )
         })
       });
    })
