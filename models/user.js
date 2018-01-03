@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   })
   User.associate = function(models) {
     User.hasMany(models.Training)
-
+    User.hasMany(models.Rower)
   }
   return User
 }
