@@ -19,7 +19,7 @@ router.get('/ships/:id', passport.authorize('jwt', {session: false }), (req, res
   const id = req.params.id
   const account = req.account.id
   const question = "SELECT * FROM `Trainings` INNER JOIN `TrainingShips` ON TrainingShips.TrainingId = Trainings.id INNER JOIN `Ships` ON TrainingShips.ShipId = Ships.id WHERE Ships.id ="
-  const queryForSql = question + id
+  const queryForSql = question + id + " AND Trainings.UserId =" + account
 
   sequelize.query(queryForSql, { type: Sequelize.QueryTypes.SELECT})
     .then((ships) => {
