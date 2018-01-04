@@ -26,42 +26,42 @@ module.exports = {
       {
         firstname: 'John',
         lastname: 'Doe',
-        UserId: 2
+        UserId: 1
       },
       {
         firstname: 'Dave',
         lastname: 'Greer',
-        UserId: 2
+        UserId: 1
       },
       {
         firstname: 'Kimberly',
         lastname: 'Stevens',
-        UserId: 2
+        UserId: 1
       },
       {
         firstname: 'Cindy',
         lastname: 'Crawfort',
-        UserId: 2
+        UserId: 1
       },
       {
         firstname: 'Amaya',
         lastname: 'Al Madani',
-        UserId: 3
+        UserId: 1
       },
       {
         firstname: 'Azadeh',
         lastname: 'Salehi',
-        UserId: 3
+        UserId: 1
       },
       {
         firstname: 'Kamran',
         lastname: 'Pashaei',
-        UserId: 3
+        UserId: 1
       },
       {
         firstname: 'Vahid',
         lastname: 'Javadi',
-        UserId: 3
+        UserId: 1
       },
       {
         firstname: 'Trystan',
@@ -71,12 +71,12 @@ module.exports = {
       {
         firstname: 'Makaila',
         lastname: 'McKinney',
-        UserId: 2
+        UserId: 1
       },
       {
         firstname: 'Carson',
         lastname: 'Thomas',
-        UserId: 3
+        UserId: 1
       },
       {
         firstname: 'Azul',
@@ -86,12 +86,12 @@ module.exports = {
       {
         firstname: 'Kayden',
         lastname: 'Weeks',
-        UserId: 2
+        UserId: 1
       },
       {
         firstname: 'Jessie',
         lastname: 'Watts',
-        UserId: 3
+        UserId: 1
       }]);
     },
 
