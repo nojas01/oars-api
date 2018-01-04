@@ -6,6 +6,9 @@
 const express = require('express')
 const multer  = require('multer')
 const passport  = require('../config/auth')
+const {promisify} = require('util')
+const fs = require('fs')
+const readFileAsync = promisify(fs.readFile)
 const router = express.Router()
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -24,11 +27,14 @@ router
 
   .get('/trainings/:id/readfile', passport.authorize('jwt', {session: false }), (req, res, next) => {
    const id = req.params.id
-   const fileToRead = './uploads/' + id + '.txt'
+   const fileToRead = './uploads/' + id + '.json'
 
    readFileAsync(fileToRead, {encoding: 'utf8'})
-     .then((data) => {console.log('content', data), res.json(data)})
+     .then((data) => {
+       const dataToSend = JSON.parse(data)
+       res.json(dataToSend)
+     })
      .catch((err) => {console.log('ERROR', err)})
 })
 
-module.exports = router;
+module.exports = router
