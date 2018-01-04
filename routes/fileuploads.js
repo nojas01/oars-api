@@ -27,8 +27,17 @@ router
    const fileToRead = './uploads/' + id + '.txt'
 
    readFileAsync(fileToRead, {encoding: 'utf8'})
-     .then((data) => {console.log('content', data), res.json(data)})
+     .then((data) => {
+       const dataToSend = JSON.parse(data)
+       res.json(dataToSend)
+     })
      .catch((err) => {console.log('ERROR', err)})
 })
 
 module.exports = router;
+
+fs.readFile('file_name.json', 'utf8', function (err, data) {
+  if (err) throw err;
+  obj = JSON.parse(data);
+  res.send(JSON.stringify(obj));
+});
