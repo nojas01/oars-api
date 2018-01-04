@@ -1,7 +1,9 @@
+
 // route to store a file with its own filename.
 // This might be changed to include more fields as to rename the file.
 // renaming can be done in the filename function see examples on:
 // https://www.npmjs.com/package/multer
+
 
 const express = require('express')
 const multer  = require('multer')
@@ -27,41 +29,12 @@ router
 
   .get('/trainings/:id/readfile', passport.authorize('jwt', {session: false }), (req, res, next) => {
    const id = req.params.id
-   const fileToRead = './uploads/1.json'
-   Number.prototype.toRadians = function() {
-     return this * Math.PI / 180;
-   }
-
-   const distance = (lat1,lat2,lon1,lon2) => {
-     var R = 6371e3; // metres
-     var f1 = lat1.toRadians();
-     var f2 = lat2.toRadians();
-     var Df = (lat2-lat1).toRadians();
-     var Dl = (lon2-lon1).toRadians();
-     var a = Math.sin(Df/2) * Math.sin(Df/2) +
-     Math.cos(f1) * Math.cos(f2) *
-     Math.sin(Dl/2) * Math.sin(Dl/2);
-     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-     var d = (R * c) ;
-
-     return d;
-   }
+   const fileToRead = './uploads/' + id + '.json'
 
    readFileAsync(fileToRead, {encoding: 'utf8'})
      .then((data) => {
-       let j = 1
-       let tempData = []
-      for (var k=1;k<data.length-1;k++){
-         j++;
-         if (data[k][8] === data[j][8]){
-           if (distance(Number.parseFloat(data[k][3]),Number.parseFloat(data[j][3]),Number.parseFloat(data[k][4]),Number.parseFloat(data[j][4])) < 1)
-           {continue;}
-
-         }
-      tempData.push(data[k]);
-    }
-
-       res.json(tempData)
+       const dataToSend = JSON.parse(data)
+       res.json(dataToSend)
      })
      .catch((err) => {console.log('ERROR', err)})
 })
